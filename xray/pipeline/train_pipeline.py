@@ -2,12 +2,12 @@ import sys
 
 from xray.components.data_ingestion import DataIngestion
 from xray.components.data_transformation import DataTransformation
-# from xray.components.model_training import ModelTrainer
+from xray.components.model_training import ModelTrainer
 
 from xray.entity.artifacts_entity import (
     DataIngestionArtifact,
     DataTransformationArtifact,
-    # ModelTrainerArtifact,
+    ModelTrainerArtifact,
 
 
 )
@@ -16,7 +16,7 @@ from xray.entity.artifacts_entity import (
 from xray.entity.config_entity import (
     DataIngestionConfig,
     DataTransformationConfig,
-    # ModelTrainerConfig,
+    ModelTrainerConfig,
 
 
 )
@@ -30,7 +30,7 @@ class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
         self.data_transformation_config = DataTransformationConfig()
-        # self.model_trainer_config = ModelTrainerConfig()
+        self.model_trainer_config = ModelTrainerConfig()
 
     def start_data_ingestion(self) -> DataIngestionArtifact:
         logging.info(
@@ -82,25 +82,27 @@ class TrainPipeline:
         except Exception as e:
             raise XRayException(e, sys)
 
-    # def start_model_trainer(
-    #     self, data_transformation_artifact: DataTransformationArtifact
-    # ) -> ModelTrainerArtifact:
-    #     logging.info("Entered the start_model_trainer method of TrainPipeline class")
+    def start_model_trainer(
+        self, data_transformation_artifact: DataTransformationArtifact
+    ) -> ModelTrainerArtifact:
+        logging.info(
+            "Entered the start_model_trainer method of TrainPipeline class")
 
-    #     try:
-    #         model_trainer = ModelTrainer(
-    #             data_transformation_artifact=data_transformation_artifact,
-    #             model_trainer_config=self.model_trainer_config,
-    #         )
+        try:
+            model_trainer = ModelTrainer(
+                data_transformation_artifact=data_transformation_artifact,
+                model_trainer_config=self.model_trainer_config,
+            )
 
-    #         model_trainer_artifact = model_trainer.initiate_model_trainer()
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
 
-    #         logging.info("Exited the start_model_trainer method of TrainPipeline class")
+            logging.info(
+                "Exited the start_model_trainer method of TrainPipeline class")
 
-    #         return model_trainer_artifact
+            return model_trainer_artifact
 
-    #     except Exception as e:
-    #         raise XRayException(e, sys)
+        except Exception as e:
+            raise XRayException(e, sys)
 
     def run_pipeline(self) -> None:
         logging.info("Entered the run_pipeline method of TrainPipeline class")
@@ -113,9 +115,9 @@ class TrainPipeline:
                 )
             )
 
-            # model_trainer_artifact: ModelTrainerArtifact = self.start_model_trainer(
-            #     data_transformation_artifact=data_transformation_artifact
-            # )
+            model_trainer_artifact: ModelTrainerArtifact = self.start_model_trainer(
+                data_transformation_artifact=data_transformation_artifact
+            )
 
             logging.info(
                 "Exited the run_pipeline method of TrainPipeline class")
